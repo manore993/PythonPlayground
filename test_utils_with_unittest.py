@@ -17,8 +17,8 @@ class TestUtils(unittest.TestCase):
             my_sum("a", 3)
         with self.assertRaises(Exception):
             my_sum(1, "z")
-            
 
+    
 
 if __name__ == '__main__':
     unittest.main()

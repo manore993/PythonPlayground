@@ -1,5 +1,5 @@
 import pytest
-from utils import my_sum;
+from utils import my_sum, reverse_str;
 
 def test_sum_of_two_positives_numbers():
     assert my_sum(1,2) == 3
@@ -17,3 +17,5 @@ def test_sum_fail_for_string():
     with pytest.raises(Exception):
         my_sum(1, "z")
             
+def test_should_reverse_string():
+    assert reverse_str('abc') == 'cba'
