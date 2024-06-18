@@ -1,6 +1,6 @@
 import utils
 import pytest
-from utils import my_sum, reverse_str, main_function;
+from utils import my_sum, reverse_str, main_function, create_player
 
 def test_sum_of_two_positives_numbers():
     assert my_sum(1,2) == 3
@@ -30,3 +30,19 @@ def test_main_function(monkeypatch):
 
     expected_value = 100 
     assert main_function() == expected_value
+
+class MockResponse:
+
+    @staticmethod
+    def get_info():
+        return {"name": "test", "level" : 200}
+
+def test_create_player(monkeypatch):
+    
+    def mock_get(*args, **kwargs):
+        return MockResponse()
+
+    monkeypatch.setattr("utils.Player", mock_get)
+    
+    expected_value = {"name": "test", "level" : 200}
+    assert create_player() == expected_value
