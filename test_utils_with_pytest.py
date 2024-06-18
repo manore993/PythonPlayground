@@ -1,5 +1,6 @@
+import utils
 import pytest
-from utils import my_sum, reverse_str;
+from utils import my_sum, reverse_str, main_function;
 
 def test_sum_of_two_positives_numbers():
     assert my_sum(1,2) == 3
@@ -19,3 +20,13 @@ def test_sum_fail_for_string():
             
 def test_should_reverse_string():
     assert reverse_str('abc') == 'cba'
+
+def test_main_function(monkeypatch):
+
+    def mockreturn():
+        return 100
+    
+    monkeypatch.setattr(utils, 'request', mockreturn)
+
+    expected_value = 100 
+    assert main_function() == expected_value
