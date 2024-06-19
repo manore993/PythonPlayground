@@ -1,6 +1,6 @@
 import utils
 import pytest
-from utils import my_sum, reverse_str, main_function, create_player
+from utils import my_sum, reverse_str, main_function, create_player, perimeter
 
 def test_sum_of_two_positives_numbers():
     assert my_sum(1,2) == 3
@@ -46,3 +46,8 @@ def test_create_player(monkeypatch):
     
     expected_value = {"name": "test", "level" : 200}
     assert create_player() == expected_value
+
+def test_perimeter(mocker):
+    mocker.patch.object(utils, 'PI', 3.14)
+    expected_value = 12.56
+    assert perimeter(2) == expected_value
