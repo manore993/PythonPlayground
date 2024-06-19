@@ -33,3 +33,8 @@ def create_player():
     player = Player("Ranga", 100)
     infos = player.get_info()
     return infos
+
+PI = 3.1415
+
+def perimeter(radius):
+    return 2 * PI * radius
