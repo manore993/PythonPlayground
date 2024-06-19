@@ -52,6 +52,11 @@ def test_create_player(monkeypatch):
     expected_value = {"name": "test", "level" : 200}
     assert create_player() == expected_value
 
+def test_create_player_pytest_plugin_mock(mocker):
+    mocker.patch('utils.Player', return_value = MockResponse)
+    expected_value = {"name": "test", "level" : 200}
+    assert create_player() == expected_value
+
 def test_perimeter(mocker):
     mocker.patch.object(utils, 'PI', 3.14)
     expected_value = 12.56
