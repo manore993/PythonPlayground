@@ -31,6 +31,11 @@ def test_main_function(monkeypatch):
     expected_value = 100 
     assert main_function() == expected_value
 
+def test_main_function_pytest_plugin_mock(mocker):
+    mocker.patch('utils.request', return_value=100)
+    expected_value = 100
+    assert main_function() == expected_value
+
 class MockResponse:
 
     @staticmethod
