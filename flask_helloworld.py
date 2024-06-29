@@ -1,17 +1,23 @@
-from flask import Flask
+from flask import Flask, request
 from markupsafe import escape
 
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
 
-    @app.route("/")
+    @app.route("/", methods=['GET'])
     def hello_world():
         return "<p>Hello, World!</p>"
 
-    @app.route("/<name>")
+    @app.route("/", methods=['POST'])
+    def hello_world_post():
+        # TODO Do some if condition based on request data
+        return f"{request.form['username']} with {request.form['password']}" 
+    
+    @app.route("/user/<name>")
     def hello_someone(name):
         return f"Hello, {escape(name)}!"
+
 
     return app
 
