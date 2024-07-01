@@ -62,3 +62,7 @@ def test_post_nethod_escape(client, username, password, expected_result):
     assert response.status_code == 200	
     assert response.data.decode() == expected_result
 
+def test_post_nethod_escape(client): 
+    response = client.post('/', data={'username' : 'toto'})
+    assert response.status_code == 400
+    
