@@ -50,3 +50,15 @@ def test_post_nethod_escape(client):
     assert response.data.decode() == 'toto with azerty&lt;script&gt;alert(&#34;hi&#34;);&lt;/script&gt;'
 
 # TODO test post with missing paraneters
+@pytest.mark.parametrize("username, password, expected_result", [
+("toto", "toto95", "Hello toto!"),
+("toto", "toto8256", "Username and password do not match. Try again"),
+("admin", "adminpw", "Hello admin! You are the admin acoount."),
+("admin", "adminpw2145", "Username and password do not match. Try again")
+])
+
+def test_post_nethod_escape(client, username, password, expected_result): 
+    response = client.post('/login/', data={'username' : username , 'password' : password})
+    assert response.status_code == 200	
+    assert response.data.decode() == expected_result
+
