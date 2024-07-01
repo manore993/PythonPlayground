@@ -42,11 +42,11 @@ def test_post_nethod(client):
     response = client.post('/', data={'username' : 'toto', 'password' : 'azerty'})
     assert response.status_code == 200	
     assert response.data.decode() == 'toto with azerty'
-
-# TODO    
-# def test_post_nethod_escape(client): 
-#     response = client.post('/', data={'username' : 'toto', 'password' : 'azerty<script>alert("hi");</script>'})
-#     assert response.status_code == 200	
-#     assert response.data.decode() == 'toto with azerty'
+ 
+def test_post_nethod_escape(client): 
+    response = client.post('/', data={'username' : 'toto', 'password' : 'azerty<script>alert("hi");</script>'})
+    assert response.status_code == 200	
+    assert response.data.decode() != 'toto with azerty<script>alert("hi");</script>'
+    assert response.data.decode() == 'toto with azerty&lt;script&gt;alert(&#34;hi&#34;);&lt;/script&gt;'
 
 # TODO test post with missing paraneters
