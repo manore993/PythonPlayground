@@ -18,11 +18,19 @@ def test_should_status_code_be_error(client):
 	response = client.get('/xxx')
 	assert response.status_code == 404	
 
-# TODO test case parametrized with multiple different user names
-def test_should_greet_user(client):
-	response = client.get('/user/Toto')
+
+@pytest.mark.parametrize("username", [
+"toto",
+"titi",
+"moumou",
+"foufou",
+"mimi",
+"meemaw"
+])
+def test_should_greet_user(client, username):
+	response = client.get(f'/user/{username}')
 	assert response.status_code == 200	
-	assert response.data.decode() == "Hello, Toto!"
+	assert response.data.decode() == f"Hello, {username}!"
 
 def test_should_greet_user_and_escape_special_chars(client):
 	response = client.get('/user/Toto&')
@@ -34,5 +42,11 @@ def test_post_nethod(client):
     response = client.post('/', data={'username' : 'toto', 'password' : 'azerty'})
     assert response.status_code == 200	
     assert response.data.decode() == 'toto with azerty'
+
+# TODO    
+# def test_post_nethod_escape(client): 
+#     response = client.post('/', data={'username' : 'toto', 'password' : 'azerty<script>alert("hi");</script>'})
+#     assert response.status_code == 200	
+#     assert response.data.decode() == 'toto with azerty'
 
 # TODO test post with missing paraneters

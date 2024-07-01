@@ -12,6 +12,7 @@ def create_app(config):
     @app.route("/", methods=['POST'])
     def hello_world_post():
         # TODO Do some if condition based on request data
+        # TODO escape
         return f"{request.form['username']} with {request.form['password']}" 
     
     @app.route("/user/<name>")
