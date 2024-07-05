@@ -1,3 +1,6 @@
 [submodule "4425126-testing-python"]
 	path = 4425126-testing-python
 	url = git@github.com:manore993/4425126-testing-python.git
+[submodule "4425126-testing-python-flask"]
+	path = 4425126-testing-python-flask
+	url = git@github.com:manore993/4425126-testing-python-flask.git
