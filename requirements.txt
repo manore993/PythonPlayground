@@ -1,2 +1,4 @@
 pytest-mock
 Flask
+pytest-playwright
+playwright
