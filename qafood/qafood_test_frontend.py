@@ -2,14 +2,25 @@ import re
 from playwright.sync_api import Page, expect
 import csv
 import pytest
-import time
+import allure
+import os
+import datetime
+import locale
+locale.setlocale(locale.LC_ALL, 'fr')
+
 
 address = "https://pprod.aldemia.fr/"
 
-# def test_access_homepage(page: Page):
-#     page.goto(address)
+def test_login(page: Page):
+    page.goto(address)
 
-#     expect(page).to_have_title(re.compile("QAFOOD"))
+    page.locator("#menu-item-28912").click()
+
+    login = os.environ["EMAIL"]
+    password = os.environ["PASSWORD"]
+    page.locator("#rpress_user_login").fill(login)
+    page.locator("#rpress_user_pass").fill(password)
+    page.locator("#rpress_login_submit").click()
 
 # def test_register_username(page: Page):
 #     page.goto(address)
@@ -89,7 +100,7 @@ def test_parametre_de_commande(page: Page, article_name, service_type, service_t
     page.locator("div.rpress-price-holder:not(.rpress-grid-view-holder)").locator(f'a[data-title="{article_name}"]').click() 
     expect(page.get_by_text("Vos paramètres de commande")).to_be_visible()
 
-    if (service_type == "Liveraison"):
+    if (service_type == "Livraison"):
         id_data_service_type = "#nav-delivery-tab"
         locator_service_time = '#rpress-delivery-hours'
     if (service_type == "À emporter"):
@@ -97,11 +108,18 @@ def test_parametre_de_commande(page: Page, article_name, service_type, service_t
         locator_service_time = '#rpress-pickup-hours'
 
     page.locator(id_data_service_type).click()
-    
-
     page.locator(locator_service_time).select_option(value=service_time)
     page.locator("a.rpress-delivery-opt-update").click()
     page.locator("a.submit-fooditem-button").click()
+
+    date_time = datetime.datetime.now()
+    date = date_time.strftime("%d")
+    month = date_time.strftime("%B")
+    year = date_time.strftime("%Y")
+    
+    text_visible = f"{service_type}, {date} {month} {year}, {service_time}"
+
+    expect(page.locator("div.delivery-opts")).to_contain_text(text_visible)
 
 @pytest.fixture
 def prerequisite_test_ajouter_multiple_article_avec_multiple_topping(page: Page):
@@ -112,7 +130,7 @@ def prerequisite_test_ajouter_multiple_article_avec_multiple_topping(page: Page)
 
     page.locator("#nav-delivery-tab").click()
     
-    page.locator('#rpress-delivery-hours').select_option(value="17:30")
+    page.locator('#rpress-delivery-hours').select_option(value="20:00")
     page.locator("a.rpress-delivery-opt-update").click()
     page.locator("a.submit-fooditem-button").click()
 
