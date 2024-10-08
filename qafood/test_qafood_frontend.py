@@ -7,6 +7,7 @@ import os
 import datetime
 import locale
 locale.setlocale(locale.LC_ALL, 'fr')
+from pathlib import Path
 
 
 address = "https://pprod.aldemia.fr/"
@@ -20,6 +21,12 @@ def test_login(page: Page):
     page.locator("#rpress_user_login").fill(login)
     page.locator("#rpress_user_pass").fill(password)
     page.locator("#rpress_login_submit").click()
+    png_bytes = page.screenshot()
+    allure.attach(
+        png_bytes,
+        name="full-page",
+        attachment_type=allure.attachment_type.PNG
+    )
 
 # def test_register_username(page: Page):
 #     page.goto(address)
@@ -125,15 +132,23 @@ class TestToto:
         page.locator("a.submit-fooditem-button").click()
 
         date_time = datetime.datetime.now()
-        date = date_time.strftime("%d")
+        # date = date_time.strftime("%d")
+        date= "19"
         month = date_time.strftime("%B")
         year = date_time.strftime("%Y")
         
         text_visible = f"{service_type}, {date} {month} {year}, {service_time}"
+            
+        expect.set_options(1000)
+        try:
+            expect(page.locator("div.delivery-opts"), "Fonction parametre de commande râté!").to_contain_text(text_visible)            
+        except:
+            self.capture_and_attach_screenshot(page)
+            raise
 
-        expect(page.locator("div.delivery-opts")).to_contain_text(text_visible)
 
     @pytest.fixture
+    @allure.title("Prerequisite pour test")
     def prerequisite_test_ajouter_multiple_article_avec_multiple_topping(self, page: Page):
         page.goto(address)
 
@@ -148,12 +163,36 @@ class TestToto:
 
     @pytest.mark.parametrize("article_name, topping", dataset_test_ajouter_multiple_article_avec_multiple_topping())
     def test_ajouter_multiple_article_avec_multiple_topping(self, page: Page, prerequisite_test_ajouter_multiple_article_avec_multiple_topping, article_name, topping):
+        
         page.locator("div.rpress-price-holder:not(.rpress-grid-view-holder)").locator(f'a[data-title="{article_name}"]').click()
         
         topping = topping.split(",")
         for i in range(0, len(topping)):
             topping[i] = topping[i].strip()
+            self.validate_topping(topping[i])
             page.locator(f'div.food-item-list input[name="{topping[i]}"]').locator('..').check()
         
         page.locator("a.submit-fooditem-button").click()
+        png_bytes = page.screenshot()
+        Path("full-page.png").write_bytes(png_bytes)
+        allure.attach.file(
+        "full-page.png",
+        name="full-page",
+        attachment_type=allure.attachment_type.PNG
+        )
+
+    def validate_topping(self, topping):
+        accepted_values = {'Ketchup', 'Sauce douce', 'Sauce piquante'}
+        if topping not in accepted_values:
+            # pytest.skip(f"Invalid topping {topping}") # --> gray    
+            # assert False, f"Invalid topping {topping}" # --> red
+            raise Exception(f"Invalid topping {topping}") # --> yellow
         
+    def capture_and_attach_screenshot(self, page, name="full-page"):
+        png_bytes = page.screenshot()
+        allure.attach(
+            png_bytes,
+            name=name,
+            attachment_type=allure.attachment_type.PNG
+        )
+    
