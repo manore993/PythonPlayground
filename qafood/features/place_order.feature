@@ -5,16 +5,17 @@ Feature: Place an order
 Scenario: Selecting order type
     Given user is logged in
     Given the current order is empty 
-    When the user select the 12 wings option 
+    When the user select the "12 wings" option 
     Then the user should be able to select order type (delivery or pick up)   
 
 
-Scenario: Ordering mutliple dish
+Scenario: Selecting multiple options
     Given user is logged in
-    Given the current order is empty 
-    When the user select the "12 wings" option     
-    When the user select delivery at 18:00
-    When the user select the "milkshake" option     
-    When the user select the "sashimi" option     
-    When the user select the "ramen" option     
-    Then the basket contains two dishes 
+    Given the user select the "12 wings" option 
+    Given the user select "delivery" and "time"
+    When  the user select the "12 wings" option 
+    When user select toppings
+        | topping |
+        | Ketchup |
+        | Sauce douce |     
+    Then there are two items in the basket
