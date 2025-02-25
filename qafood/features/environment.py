@@ -32,6 +32,7 @@ def before_all(context):
     use_fixture(playwright_browser_chrome, context)
     use_fixture(logged_in_context, context)
 
+
 def before_feature(context, feature):
     features = (scenario for scenario in feature.scenarios if type(scenario) == ScenarioOutline and 'dynamic' in scenario.tags)
     for scenario in features:
@@ -48,39 +49,17 @@ def before_feature(context, feature):
 
             order_loop_count = 0
             for order in orders:
-                # n = copy.deepcopy(orig)
+                
                 print (f'{order_loop_count} order loop')
-                articles = []
-                options = []
-                quantity = []
-                
-                articles_bis = [article["article"] for article in order["articles"]]
 
-                for article in order["articles"]:
-                    articles.append(article["article"])
-                
-                    article_options = array_to_string(article["options"], ",")
-                    
-                    options.append(article_options)
-                    
-                    quantity.append(str(article["quantity"]))
-
-                articles = array_to_string(articles, ";")
-                # articles = ";".join(articles)
-                options =  array_to_string(options, ";")
-                quantity = array_to_string(quantity, ";")   
-               
-                n = Row(headings=headers, cells=['{}'.format(order["order_name"]),
-                           '{}'.format(articles),
-                           '{}'.format(options),
-                           '{}'.format(quantity)])
+                n = Row(headings=headers, 
+                         cells=[order["order_name"],
+                             json.dumps(order["articles"])])
 
                 example.table.rows.append(n)
                 order_loop_count += 1
             print (f'final example value is {example.table.rows}')
-                
-        # Print the data
-        # print(data)      
+                    
 
     if "Constructing an order" in feature.name:
         page = context.page
@@ -93,16 +72,75 @@ def before_feature(context, feature):
         page.locator("a.submit-fooditem-button").click()
         page.locator("a.rpress-remove-from-cart").click()
 
-def array_to_string (array, separator:str):
 
-    # string_result = ""
-    string_result= separator.join(array)
-    # for item in array:
-        # if string_result == "":
-        #     string_result = item
-        # else:
-        #     string_result = string_result+separator+item
-    return string_result
-
-
+# def before_feature(context, feature):
+#     features = (scenario for scenario in feature.scenarios if type(scenario) == ScenarioOutline and 'dynamic' in scenario.tags)
+#     for scenario in features:
         
+#         for example in scenario.examples: 
+            
+#             with open('./features/place_order.json',encoding="utf-8") as file:
+#                 orders = json.load(file)  # Load JSON data as a Python dictionary
+
+#             orig: Row = example.table.rows[0]
+#             headers = orig.headings
+
+#             example.table.rows = []
+
+#             order_loop_count = 0
+#             for order in orders:
+#                 # n = copy.deepcopy(orig)
+#                 print (f'{order_loop_count} order loop')
+#                 articles = []
+#                 options = []
+#                 quantity = []
+                
+#                 articles_bis = [article["article"] for article in order["articles"]]
+
+#                 for article in order["articles"]:
+#                     articles.append(article["article"])
+                
+#                     article_options = array_to_string(article["options"], ",")
+                    
+#                     options.append(article_options)
+                    
+#                     quantity.append(str(article["quantity"]))
+
+#                 articles = array_to_string(articles, ";")
+#                 # articles = ";".join(articles)
+#                 options =  array_to_string(options, ";")
+#                 quantity = array_to_string(quantity, ";")   
+               
+#                 n = Row(headings=headers, cells=['{}'.format(order["order_name"]),
+#                            '{}'.format(articles),
+#                            '{}'.format(options),
+#                            '{}'.format(quantity)])
+
+#                 example.table.rows.append(n)
+#                 order_loop_count += 1
+#             print (f'final example value is {example.table.rows}')
+                
+#         # Print the data
+#         # print(data)      
+
+#     if "Constructing an order" in feature.name:
+#         page = context.page
+#         page.on("dialog", lambda dialog: dialog.accept())
+#         page.locator("div.rpress-price-holder:not(.rpress-grid-view-holder)").locator(f'a[data-title="12 wings"]').click()
+#         page.locator("#nav-delivery-tab").click()
+            
+#         page.locator('#rpress-delivery-hours').select_option(value="20:00")
+#         page.locator("a.rpress-delivery-opt-update").click()
+#         page.locator("a.submit-fooditem-button").click()
+#         page.locator("a.rpress-remove-from-cart").click()
+
+# def array_to_string (array, separator:str):
+
+#     # string_result = ""
+#     string_result= separator.join(array)
+#     # for item in array:
+#         # if string_result == "":
+#         #     string_result = item
+#         # else:
+#         #     string_result = string_result+separator+item
+#     return string_result
