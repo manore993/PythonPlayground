@@ -72,6 +72,8 @@ def before_feature(context, feature):
         page.locator("a.submit-fooditem-button").click()
         page.locator("a.rpress-remove-from-cart").click()
 
+# def after_scenario(context, scenario):
+
 
 # def before_feature(context, feature):
 #     features = (scenario for scenario in feature.scenarios if type(scenario) == ScenarioOutline and 'dynamic' in scenario.tags)
