@@ -3,6 +3,8 @@ from playwright.sync_api import sync_playwright
 import copy
 from behave.model import ScenarioOutline, Row
 import json
+from time import sleep
+
 @fixture
 def playwright_browser_chrome(context):
     p = sync_playwright().start()
@@ -61,7 +63,19 @@ def before_feature(context, feature):
             print (f'final example value is {example.table.rows}')
                     
 
-    if "Constructing an order" in feature.name:
+    # if "Constructing an order" in feature.name:
+    #     page = context.page
+    #     page.on("dialog", lambda dialog: dialog.accept())
+    #     page.locator("div.rpress-price-holder:not(.rpress-grid-view-holder)").locator(f'a[data-title="12 wings"]').click()
+    #     page.locator("#nav-delivery-tab").click()
+            
+    #     page.locator('#rpress-delivery-hours').select_option(value="20:00")
+    #     page.locator("a.rpress-delivery-opt-update").click()
+    #     page.locator("a.submit-fooditem-button").click()
+    #     page.locator("a.rpress-remove-from-cart").click()
+
+def before_scenario(context, scenario):
+    if "User creates an order with multiple items and options" in scenario.name:
         page = context.page
         page.on("dialog", lambda dialog: dialog.accept())
         page.locator("div.rpress-price-holder:not(.rpress-grid-view-holder)").locator(f'a[data-title="12 wings"]').click()
@@ -71,8 +85,13 @@ def before_feature(context, feature):
         page.locator("a.rpress-delivery-opt-update").click()
         page.locator("a.submit-fooditem-button").click()
         page.locator("a.rpress-remove-from-cart").click()
-
-# def after_scenario(context, scenario):
+# 
+def after_scenario(context, scenario):
+    if "User creates an order with multiple items and options" in scenario.name:
+        page = context.page
+        page.on("dialog", lambda dialog: dialog.accept())
+        page.locator("a.rpress-clear-cart").click()
+        sleep(2)
 
 
 # def before_feature(context, feature):
